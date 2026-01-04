@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const connectToDB = require("./dbConfig/dbConnect");
+const authRouter = require("../server/routes/authRoutes")
 
 const app = express();
 
@@ -11,6 +12,7 @@ if (!PORT) {
 
 // Middlewares
 app.use(express.json());
+app.use("/api/auth/", authRouter)
 
 // Root route
 app.get("/", (req, res) => {
@@ -30,5 +32,22 @@ const startServer = async () => {
     process.exit(1);
   }
 };
+
+// app.post("/register", async (req, res) => {
+//   try {
+//     const { email } = req.body;
+//     const foundUser = await User.findOne({ email: email });
+//     if (foundUser) {
+//       return res.status(409).json({ message: "User already exists" });
+//     }
+//     const newUser = await User.create(req.body);
+//     if (!newUser) {
+//       return res.status(404).json({ messsage: "User not found" });
+//     }
+//     res.status(201).json({ status: "success", user: newUser });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// });
 
 startServer();
