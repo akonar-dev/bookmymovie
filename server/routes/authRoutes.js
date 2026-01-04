@@ -10,11 +10,6 @@ authRouter.post("/register", async (req, res) => {
     if (foundUser) {
       return res.status(409).json({ message: "User already exists" });
     }
-
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = bcrypt.hashSync(password, salt);
-    req.body.password = hashedPassword;
-
     const newUser = await User.create(req.body);
     if (!newUser) {
       return res.status(404).json({ messsage: "User not created" });
