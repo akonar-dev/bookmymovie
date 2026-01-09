@@ -2,7 +2,7 @@ function App() {
 
   return (
     <>
-      <h1>BookMyMovie</h1>
+      <h1>BookMyMovie Home</h1>
     </>
   )
 }
