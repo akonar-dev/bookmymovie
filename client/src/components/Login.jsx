@@ -1,11 +1,17 @@
 import { Form, Input, Button, Card, message } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Link } from "react-router";
+import { loginUser } from "../api/auth_api";
+import { useNavigate } from "react-router";
 
 const Login = () => {
-  const onFinish = (values) => {
-    console.log("Login data:", values);
-    message.success("Login successful");
+  const navigate = useNavigate();
+  const onFinish = async (values) => {
+      const login = await loginUser(values)
+      const {loggedIn} = login
+      if(loggedIn) {
+        navigate("/")
+      }
   };
 
   return (
@@ -18,11 +24,14 @@ const Login = () => {
           autoComplete="off"
         >
           <Form.Item
-            label="Username"
-            name="username"
-            rules={[{ required: true, message: "Please enter username" }]}
+            label="Email"
+            name="email"
+            rules={[
+              { required: true, message: "Email is required" },
+              { type: "email", message: "Enter a valid email" },
+            ]}
           >
-            <Input prefix={<UserOutlined />} placeholder="Username" />
+            <Input prefix={<MailOutlined />} placeholder="Email" />
           </Form.Item>
 
           <Form.Item

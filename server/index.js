@@ -2,17 +2,24 @@ require("dotenv").config();
 const express = require("express");
 const connectToDB = require("./dbConfig/dbConnect");
 const authRouter = require("../server/routes/authRoutes")
+const cors = require('cors')
 
 const app = express();
+
 
 const PORT = process.env.PORT || 5000;
 if (!PORT) {
   throw new Error("PORT is not defined");
 }
 
+app.use(cors({
+  origin: 'http://localhost:5173',
+  optionsSuccessStatus: 200
+}))
 // Middlewares
 app.use(express.json());
 app.use("/api/auth/", authRouter)
+
 
 // Root route
 app.get("/", (req, res) => {
