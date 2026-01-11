@@ -3,6 +3,7 @@ const express = require("express");
 const connectToDB = require("./dbConfig/dbConnect");
 const authRouter = require("../server/routes/authRoutes")
 const cors = require('cors')
+const cookieParser = require("cookie-parser")
 
 const app = express();
 
@@ -17,7 +18,8 @@ app.use(cors({
   optionsSuccessStatus: 200
 }))
 // Middlewares
-app.use(express.json());
+app.use(express.json())
+app.use(cookieParser())
 app.use("/api/auth/", authRouter)
 
 

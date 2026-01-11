@@ -3,6 +3,7 @@ const authRouter = express.Router();
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken")
+const isAuth = require("../middlewares/authMiddleware")
 
 authRouter.post("/register", async (req, res) => {
   try {
@@ -15,8 +16,7 @@ authRouter.post("/register", async (req, res) => {
     if (!newUser) {
       return res.status(404).json({ messsage: "User not created" });
     }
-    const token = jwt.sign({userId : newUser._id},process.env.JWT_SECRET_KEY)
-    res.status(201).json({ status: "success", user: newUser, token:token });
+    res.status(201).json({ status: "success", user: newUser});
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -33,9 +33,14 @@ authRouter.post("/login", async (req, res) => {
       });
     } else {
       if (bcrypt.compareSync(password, userFound.password)) {
+        const token = jwt.sign({userId : userFound._id},process.env.JWT_SECRET_KEY)
+        res.cookie("token", token, {
+          httpOnly: true, // JS can't access (prevents XSS)// only HTTPS (use false in local dev)
+        });
         res.status(200).json({
           loggedIn: true,
           message: "User logged in successfully",
+          token
         });
       } else {
         res.status(401).json({
@@ -48,5 +53,10 @@ authRouter.post("/login", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+authRouter.get("/current-user",isAuth, async (req,res) => {
+  const userId = req.userId
+  res.json({ userId : userId})
+})
 
 module.exports = authRouter;
