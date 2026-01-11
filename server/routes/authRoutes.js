@@ -34,14 +34,19 @@ authRouter.post("/login", async (req, res) => {
     } else {
       if (bcrypt.compareSync(password, userFound.password)) {
         const token = jwt.sign({userId : userFound._id},process.env.JWT_SECRET_KEY)
-        res.cookie("token", token, {
-          httpOnly: true, // JS can't access (prevents XSS)// only HTTPS (use false in local dev)
-        });
-        res.status(200).json({
-          loggedIn: true,
-          message: "User logged in successfully",
-          token
-        });
+        return res
+          .cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            path: "/",
+          })
+          .status(200)
+          .json({
+            loggedIn: true,
+            message: "User logged in successfully",
+            user: userFound,
+          });
       } else {
         res.status(401).json({
           loggedIn: false,
@@ -56,7 +61,8 @@ authRouter.post("/login", async (req, res) => {
 
 authRouter.get("/current-user",isAuth, async (req,res) => {
   const userId = req.userId
-  res.json({ userId : userId})
+  const user = await User.findOne({ _id: userId });
+  return res.json({user})
 })
 
 module.exports = authRouter;

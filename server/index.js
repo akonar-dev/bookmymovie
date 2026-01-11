@@ -15,7 +15,8 @@ if (!PORT) {
 
 app.use(cors({
   origin: 'http://localhost:5173',
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
+  credentials: true
 }))
 // Middlewares
 app.use(express.json())

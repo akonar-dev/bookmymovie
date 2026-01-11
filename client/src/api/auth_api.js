@@ -13,7 +13,7 @@ export const registerUser = async (values) => {
 export const loginUser = async (values) => {
   try {
     const response = await axios.post("http://localhost:8001/api/auth/login",
-      values);
+      values, {withCredentials: true});
     console.log(response,"resp")
     const data = response.data;
     return data
@@ -21,6 +21,17 @@ export const loginUser = async (values) => {
     console.error(error);
   }
 };
+
+export const getUserData = async(values) => {
+  try {
+    const response = await axios.get("http://localhost:8001/api/auth/current-user", {
+      withCredentials: true
+    })
+    return response
+  } catch (error) {
+    console.error("Current user error", error.message)
+  }
+}
 
 
 // axios.get('localhost:8001/api/auth/register/')
