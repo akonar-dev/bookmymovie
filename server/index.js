@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const connectToDB = require("./dbConfig/dbConnect");
 const authRouter = require("../server/routes/authRoutes")
+const movieRouter = require("../server/routes/movieRoutes")
 const cors = require('cors')
 const cookieParser = require("cookie-parser")
 
@@ -22,6 +23,7 @@ app.use(cors({
 app.use(express.json())
 app.use(cookieParser())
 app.use("/api/auth/", authRouter)
+app.use("/api/movie/", movieRouter)
 
 
 // Root route
