@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { getUserData } from "../api/auth_api"
+import Navbar from "./Navbar.jsx";
 function App() {
 
   const [currentUser, setCurrentUser] = useState("")
@@ -13,6 +14,7 @@ function App() {
   }, []);
   return (
     <>
+      <Navbar currentUser={currentUser}/>
       <h1>BookMyMovie Home. Welcome {currentUser.toUpperCase()}</h1>
     </>
   )
