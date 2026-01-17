@@ -3,11 +3,20 @@ import { Layout, Menu, Button, Space, Typography } from "antd";
 const { Header } = Layout;
 const { Text } = Typography;
 import {useNavigate} from "react-router"
+import { logout as logoutAction} from "../redux-toolkit/userReducer";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../api/auth_api";
 
 const Navbar = ({currentUser}) => {
   const navigate = useNavigate();
-  const onLogout = ()=>{
-    navigate("/login")
+  const dispatch = useDispatch();
+  const onLogout = async ()=>{
+    const logout = await logoutUser();
+    if(logout.success) {
+      dispatch(logoutAction());
+      navigate("/login")
+    }
+    console.log(logout.success, "api logout")
   }
   return (
     <Header

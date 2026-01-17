@@ -33,19 +33,13 @@ export const getUserData = async(values) => {
   }
 }
 
-
-// axios.get('localhost:8001/api/auth/register/')
-//   .then(response => {
-//     console.log('Axios is working:', response.data);
-//   })
-//   .catch(error => {
-//     console.error('Error using Axios:', error);
-//   });
-
-// axios.post('https://jsonplaceholder.typicode.com/posts', {
-//   title: 'New Post',
-//   body: 'This is a new post.',
-//   userId: 1
-// })
-// .then(response => console.log(response.data))
-// .catch(error => console.error(error));
+export const logoutUser = async () => {
+  try {
+  const response = await axios.post("http://localhost:8001/api/auth/logout",{}, {withCredentials: true});
+    console.log(response,"resp logout")
+    const data = response.data;
+    return data
+  } catch (error) {
+    console.error(error);
+  }
+}

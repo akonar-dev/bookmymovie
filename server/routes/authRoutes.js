@@ -34,6 +34,7 @@ authRouter.post("/login", async (req, res) => {
     } else {
       if (bcrypt.compareSync(password, userFound.password)) {
         const token = jwt.sign({userId : userFound._id},process.env.JWT_SECRET_KEY)
+        console.log(token,"backend generated token")
         return res
           .cookie("token", token, {
             httpOnly: true,
@@ -66,3 +67,24 @@ authRouter.get("/current-user",isAuth, async (req,res) => {
 })
 
 module.exports = authRouter;
+
+authRouter.post("/logout", (req, res) => {
+  console.log("Cookies before clear:", req.cookies.token);
+
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    path: "/",
+  });
+
+  console.log("Clear cookie called");
+  console.log("Logout cookies:", req.cookies);
+
+
+  return res.status(200).json({
+    success: true,
+    message: "Logged out successfully",
+  });
+});
+

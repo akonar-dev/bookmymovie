@@ -1,18 +1,31 @@
+import { useEffect } from "react";
 import { Form, Input, Button, Card, message } from "antd";
 import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Link } from "react-router";
-import { loginUser } from "../api/auth_api";
+import { loginUser, getUserData } from "../api/auth_api";
 import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { getUser } from "../redux-toolkit/userReducer";
 
 const Login = () => {
   const navigate = useNavigate();
   const onFinish = async (values) => {
       const login = await loginUser(values)
+      console.log(login,"login")
       const {loggedIn} = login
       if(loggedIn) {
+        console.log("inside loggedin")
         navigate("/")
       }
   };
+  const dispatch = useDispatch()
+  useEffect(() => {
+      const fetchUser = async () => {
+        const user = await getUserData();
+        dispatch(getUser(user.data.user.firstname))
+      };
+      fetchUser();
+    }, []);
 
   return (
     <div style={styles.container}>
